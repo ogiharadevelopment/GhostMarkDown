@@ -1,0 +1,163 @@
+{
+  "name": "ghostmarkdown",
+  "displayName": "GhostMarkDown",
+  "description": "Powerful code navigation and bookmarking with mouse hover + keyboard shortcuts. Create customizable marks (a-z) with priorities, filters, and team sync.",
+  "version": "0.2.0",
+  "publisher": "037458b4-e85a-64f0-a714-98f85ddb505b",
+  "icon": "icons/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "bookmarks",
+    "marks",
+    "navigation",
+    "productivity",
+    "code navigation",
+    "jump to mark",
+    "hover shortcuts",
+    "team collaboration",
+    "priority management"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ghostmarkdown.git"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ghostmarkdown.toggle",
+        "title": "GhostMarkDown: 有効/無効を切り替え"
+      },
+      {
+        "command": "ghostmarkdown.showGuide",
+        "title": "GhostMarkDown: ガイドを表示"
+      },
+      {
+        "command": "ghostmarkdown.openSettings",
+        "title": "GhostMarkDown: Open Settings"
+      },
+      {
+        "command": "ghostmarkdown.openMarkQuickPick",
+        "title": "GhostMarkDown: Open Mark List"
+      },
+      {
+        "command": "ghostmarkdown.jumpToNextMark",
+        "title": "GhostMarkDown: Jump to Next Mark"
+      },
+      {
+        "command": "ghostmarkdown.jumpToPreviousMark",
+        "title": "GhostMarkDown: Jump to Previous Mark"
+      }
+    ],
+    "configuration": {
+      "title": "GhostMarkDown",
+      "properties": {
+        "ghostmarkdown.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "ゴーストオーバーレイを有効にする"
+        },
+        "ghostmarkdown.cornerIndicatorSize": {
+          "type": "number",
+          "default": 4,
+          "description": "四隅の赤い点のサイズ（ピクセル）"
+        },
+        "ghostmarkdown.hoverDelay": {
+          "type": "number",
+          "default": 200,
+          "description": "ガイド表示までの遅延時間（ミリ秒）"
+        },
+        "ghostmarkdown.guidePosition": {
+          "type": "string",
+          "enum": ["below", "above", "right", "left"],
+          "default": "below",
+          "description": "ガイドパレットの表示位置"
+        },
+        "ghostmarkdown.shortcuts": {
+          "type": "object",
+          "default": {
+            "word": {
+              "L": {
+                "type": "builtin",
+                "action": "insertLog",
+                "label": "Insert Log"
+              }
+            },
+            "selection": {
+              "L": {
+                "type": "builtin",
+                "action": "insertLog",
+                "label": "Insert Log"
+              }
+            },
+            "function": {
+              "L": {
+                "type": "builtin",
+                "action": "insertLog",
+                "label": "Insert Log"
+              }
+            },
+            "class": {
+              "L": {
+                "type": "builtin",
+                "action": "insertLog",
+                "label": "Insert Log"
+              }
+            },
+            "variable": {
+              "L": {
+                "type": "builtin",
+                "action": "insertLog",
+                "label": "Insert Log"
+              }
+            }
+          },
+          "description": "Keyboard shortcuts for Ghost hover actions"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "ghostmarkdown.toggle",
+        "key": "ctrl+shift+g",
+        "mac": "cmd+shift+g"
+      },
+      {
+        "command": "ghostmarkdown.showGuide",
+        "key": "ctrl+shift+space",
+        "mac": "cmd+shift+space"
+      },
+      {
+        "command": "ghostmarkdown.jumpToNextMark",
+        "key": "ctrl+alt+]",
+        "mac": "cmd+alt+]"
+      },
+      {
+        "command": "ghostmarkdown.jumpToPreviousMark",
+        "key": "ctrl+alt+[",
+        "mac": "cmd+alt+["
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.x",
+    "typescript": "^5.3.0",
+    "@vscode/test-electron": "^2.3.8"
+  }
+}

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Settings</title>
+    <style>
+        body { font-family: var(--vscode-font-family); font-size: var(--vscode-font-size); color: var(--vscode-foreground); background-color: var(--vscode-editor-background); padding: 20px; }
+        h1 { font-size: 24px; margin-bottom: 20px; }
+        h2 { font-size: 18px; margin-top: 30px; margin-bottom: 10px; color: var(--vscode-textLink-foreground); }
+        .tabs { display: flex; border-bottom: 1px solid var(--vscode-panel-border); margin-bottom: 20px; }
+        .tab { padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab.active { border-bottom-color: var(--vscode-textLink-foreground); color: var(--vscode-textLink-foreground); }
+        .tab:hover { background-color: var(--vscode-editor-lineHighlightBackground); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--vscode-panel-border); }
+        th { background-color: var(--vscode-editor-lineHighlightBackground); font-weight: bold; }
+        button { background-color: var(--vscode-button-background); color: var(--vscode-button-foreground); border: none; padding: 8px 16px; cursor: pointer; margin-right: 5px; }
+        button:hover { background-color: var(--vscode-button-hoverBackground); }
+        input[type="text"] { background-color: var(--vscode-input-background); color: var(--vscode-input-foreground); border: 1px solid var(--vscode-input-border); padding: 5px 10px; width: 100%; }
+        .icon-preview { font-size: 24px; display: inline-block; width: 40px; text-align: center; }
+        .mark-row { margin-bottom: 10px; padding: 10px; background-color: var(--vscode-editor-lineHighlightBackground); border-radius: 5px; }
+        .mark-row input { margin: 5px 0; }
+        .reset-button { background-color: var(--vscode-errorForeground); }
+    </style>
+</head>
+<body>
+    <h1>👻 Ghost in the VSC - Settings</h1>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="allmarks">All Marks</div>
+        <div class="tab" data-tab="config">Mark Config</div>
+        <div class="tab" data-tab="history">History</div>
+        <div class="tab" data-tab="support">💝 Support</div>
+    </div>
+    
+    <div id="allmarks-tab" class="tab-content active">
+        <h2>📚 All Marks List</h2>
+        
+        <!-- フィルター・ソートコントロール -->
+        <div style="margin-bottom: 20px; padding: 10px; background-color: var(--vscode-editor-lineHighlightBackground); border-radius: 5px;">
+            <div style="margin-bottom: 10px;">
+                <label>Sort by: </label>
+                <select id="sort-select">
+                    <option value="created">Created Time (Newest)</option>
+                    <option value="priority">Priority (Highest)</option>
+                    <option value="key">Key (A-Z)</option>
+                </select>
+                
+                <label style="margin-left: 20px;">
+                    <input type="checkbox" id="show-completed"> Show Completed
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 10px;">
+                <label>Filter by Key: </label>
+                <div id="key-filter" style="display: inline-block;"></div>
+            </div>
+            
+            <div>
+                <input type="text" id="search-box" placeholder="Search by name, note, or symbol..." style="width: 50%;">
+            </div>
+        </div>
+        
+        <!-- マーク一覧テーブル -->
+        <div id="allmarks-content"><p>No marks yet. Click on a line and press a-z to create marks.</p></div>
+    </div>
+    
+    <div id="config-tab" class="tab-content">
+        <h2>⚙️ Mark Configuration (a-z)</h2>
+        <p>Customize icon, label, and color for each key.</p>
+        <div id="config-content"></div>
+        <button id="reset-marks" class="reset-button">Reset to Defaults</button>
+    </div>
+    
+    <div id="history-tab" class="tab-content">
+        <h2>Command History</h2>
+        <div id="history-content"><p>No command history yet</p></div>
+    </div>
+    
+    <div id="support-tab" class="tab-content">
+        <h2>💝 Support This Project</h2>
+        <div style="padding: 20px; background-color: var(--vscode-editor-lineHighlightBackground); border-radius: 10px; max-width: 600px;">
+            <p style="font-size: 16px; margin-bottom: 20px;">
+                GhostMarkDown is a free and open-source extension. If you find it useful, please consider supporting its development!
+            </p>
+            
+            <p style="font-size: 16px; margin-bottom: 20px;">
+                GhostMarkDownは無料のオープンソース拡張機能です。便利だと感じたら、開発をサポートしていただけると嬉しいです！
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="https://buymeacoffee.com/ogiharadevelopment" 
+                   style="display: inline-block; padding: 15px 30px; background-color: #FFDD00; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;">
+                    ☕ Buy Me a Coffee
+                </a>
+            </div>
+            
+            <p style="margin-top: 30px; font-size: 14px; opacity: 0.8;">
+                Your support helps maintain and improve this extension. Thank you! 🙏<br>
+                あなたのサポートがこの拡張機能の維持と改善に役立ちます。ありがとうございます！🙏
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        (function() {
+            const vscode = acquireVsCodeApi();
+            let allMarks = [];
+            let customMarks = [];
+            let selectedKeys = [];
+            
+            // タブ切り替え
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(tabName + '-tab').classList.add('active');
+                });
+            });
+            
+            // リセットボタン
+            document.getElementById('reset-marks').addEventListener('click', () => {
+                vscode.postMessage({ command: 'resetMarks' });
+            });
+            
+            // ソート・フィルター変更イベント
+            document.getElementById('sort-select').addEventListener('change', refreshAllMarks);
+            document.getElementById('show-completed').addEventListener('change', refreshAllMarks);
+            document.getElementById('search-box').addEventListener('input', refreshAllMarks);
+            
+            // データ読み込み
+            vscode.postMessage({ command: 'load' });
+            
+            // メッセージ受信
+            window.addEventListener('message', event => {
+                const message = event.data;
+                if (message.command === 'loaded') {
+                    customMarks = message.customMarks || [];
+                    allMarks = message.allMarks || [];
+                    renderCustomMarks(customMarks);
+                    renderKeyFilter(customMarks);
+                    renderAllMarks(allMarks);
+                    renderHistory(message.history || []);
+                }
+            });
+            
+            function renderKeyFilter(configs) {
+                const filter = document.getElementById('key-filter');
+                let html = '';
+                configs.forEach(config => {
+                    html += `<label style="margin-right: 10px;">
+                        <input type="checkbox" class="key-checkbox" value="${config.key}">
+                        ${config.key.toUpperCase()}
+                    </label>`;
+                });
+                filter.innerHTML = html;
+                
+                // チェックボックスイベント
+                filter.querySelectorAll('.key-checkbox').forEach(cb => {
+                    cb.addEventListener('change', function() {
+                        if (this.checked) {
+                            selectedKeys.push(this.value);
+                        } else {
+                            selectedKeys = selectedKeys.filter(k => k !== this.value);
+                        }
+                        refreshAllMarks();
+                    });
+                });
+            }
+            
+            function refreshAllMarks() {
+                const sortBy = document.getElementById('sort-select').value;
+                const showCompleted = document.getElementById('show-completed').checked;
+                const searchText = document.getElementById('search-box').value;
+                
+                vscode.postMessage({
+                    command: 'filterMarks',
+                    sortBy: sortBy,
+                    showCompleted: showCompleted,
+                    filterKeys: selectedKeys.length > 0 ? selectedKeys : null,
+                    searchText: searchText
+                });
+            }
+            
+            function renderAllMarks(marks) {
+                const content = document.getElementById('allmarks-content');
+                if (!marks || marks.length === 0) {
+                    content.innerHTML = '<p>No marks found.</p>';
+                    return;
+                }
+                
+                let html = '<table><tr><th>Key</th><th>Name</th><th>Priority</th><th>File:Line</th><th>Note</th><th>Created</th><th>Status</th><th>Actions</th></tr>';
+                marks.forEach(mark => {
+                    const config = customMarks.find(c => c.key === mark.key) || { icon: mark.key, label: mark.key };
+                    const fileName = mark.uri.split('/').pop();
+                    const created = new Date(mark.created).toLocaleString();
+                    const statusIcon = mark.completed ? '✅' : '⏳';
+                    const priorityStars = '⭐'.repeat(mark.priority);
+                    
+                    html += `<tr>
+                        <td>${config.icon} <small>${mark.key}</small></td>
+                        <td><strong>${mark.name}</strong></td>
+                        <td>${priorityStars} (${mark.priority})</td>
+                        <td><small>${fileName}:${mark.line + 1}</small></td>
+                        <td><small>${mark.note || '-'}</small></td>
+                        <td><small>${created}</small></td>
+                        <td>${statusIcon}</td>
+                        <td>
+                            <button onclick="jumpToMark('${mark.id}')">Jump</button>
+                            <button onclick="deleteMark('${mark.id}')">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</table>';
+                content.innerHTML = html;
+            }
+            
+            // グローバル関数（onclick用）
+            window.jumpToMark = function(id) {
+                vscode.postMessage({ command: 'jumpToMark', markId: id });
+            };
+            
+            window.deleteMark = function(id) {
+                vscode.postMessage({ command: 'deleteMark', markId: id });
+            };
+            
+            function renderCustomMarks(marks) {
+                const content = document.getElementById('config-content');
+                let html = '';
+                
+                marks.forEach(mark => {
+                    html += `
+                        <div class="mark-row">
+                            <strong>Key: ${mark.key.toUpperCase()}</strong>
+                            <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+                                <span class="icon-preview">${mark.icon}</span>
+                                <div style="flex: 1;">
+                                    <input type="text" value="${mark.icon}" data-key="${mark.key}" data-field="icon" placeholder="Icon (emoji)">
+                                    <input type="text" value="${mark.label}" data-key="${mark.key}" data-field="label" placeholder="Label">
+                                    <input type="text" value="${mark.color}" data-key="${mark.key}" data-field="color" placeholder="Color (hex)">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                content.innerHTML = html;
+                
+                // 入力イベント
+                content.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const key = this.getAttribute('data-key');
+                        const field = this.getAttribute('data-field');
+                        const value = this.value;
+                        vscode.postMessage({
+                            command: 'updateMarkConfig',
+                            key: key,
+                            field: field,
+                            value: value
+                        });
+                        
+                        // アイコンプレビューを更新
+                        if (field === 'icon') {
+                            const preview = this.parentElement.parentElement.querySelector('.icon-preview');
+                            preview.textContent = value;
+                        }
+                    });
+                });
+            }
+            
+            function renderHistory(history) {
+                const content = document.getElementById('history-content');
+                if (!history || history.length === 0) {
+                    content.innerHTML = '<p>No command history yet</p>';
+                } else {
+                    let html = '<table><tr><th>Command</th><th>Count</th><th>Last Used</th></tr>';
+                    history.forEach(item => {
+                        const date = new Date(item.lastUsed);
+                        html += `<tr>
+                            <td>${item.command}</td>
+                            <td>${item.count}</td>
+                            <td>${date.toLocaleString()}</td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                    content.innerHTML = html;
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
