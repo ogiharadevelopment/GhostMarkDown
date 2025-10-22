@@ -28,3 +28,9 @@ Thumbs.db
 
 # Map files
 *.map
+
+# Development documentation (exclude from package)
+*.md
+!README.md
+!CHANGELOG.md
+!LICENSE

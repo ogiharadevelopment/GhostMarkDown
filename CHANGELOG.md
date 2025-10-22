@@ -2,6 +2,49 @@
 
 All notable changes to the "GhostMarkDown" extension will be documented in this file.
 
+## [0.2.3] - 2025-01-27
+
+### 🔧 Repository & Support Links Update
+
+#### Fixed
+- **Repository URL** updated from placeholder to actual GitHub repository
+- **Support links** unified to Buy Me a Coffee platform
+- **GitHub Issues** links now point to correct repository
+
+#### Updated
+- All support and repository references now use correct URLs
+- Consistent branding across all documentation
+
+## [0.2.2] - 2025-01-27
+
+### 🔒 Patent Protection Update (Enhanced)
+
+#### Added
+- **Bilingual Patent Protection Notice** (Japanese/English) in Support tab
+- **Enhanced Commercial Use Restrictions** with clear licensing terms
+- **Removed "Open Source" terminology** to clarify patent protection
+- **Comprehensive Patent Information** in both languages
+
+#### Legal
+- Updated all references from "open source" to "patented technology"
+- Added English patent protection notices
+- Enhanced commercial licensing contact information
+
+## [0.2.1] - 2025-01-27
+
+### 🔒 Patent Protection Update
+
+#### Added
+- **Patent Protection Notice** in README.md and LICENSE
+- **Commercial Use Restrictions** clearly defined
+- **Patent Information** section in Support tab
+- **Commercial Licensing Contact** information
+
+#### Legal
+- Added comprehensive patent protection notices
+- Clarified MIT License scope (personal/educational use only)
+- Added commercial licensing contact information
+
 ## [0.2.0] - 2025-10-21
 
 ### 🎉 Major Release - Mark System & Team Sync

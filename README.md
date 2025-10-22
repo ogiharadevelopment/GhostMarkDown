@@ -251,9 +251,27 @@ MIT License - see [LICENSE](LICENSE)
 
 ## 🌟 Support
 
-- 🐛 [Report Issues](https://github.com/yourusername/ghostmarkdown/issues)
-- 💡 [Request Features](https://github.com/yourusername/ghostmarkdown/issues)
-- ☕ [Support via Ko-fi](https://ko-fi.com/yourusername) (Optional)
+- 🐛 [Report Issues](https://github.com/ogiharadevelopment/GhostMarkDown/issues)
+- 💡 [Request Features](https://github.com/ogiharadevelopment/GhostMarkDown/issues)
+- ☕ [Support via Buy Me a Coffee](https://buymeacoffee.com/ogiharadevelopment) (Optional)
+
+## ⚖️ Patent Notice
+
+**⚠️ IMPORTANT: Patent Protection Notice**
+
+This extension implements patented technology. The Ghost Interface technology is protected by issued patents, with additional patents pending for related features.
+
+**Commercial Use Restrictions:**
+- This software is provided under MIT License for **personal and educational use only**
+- **Commercial use, redistribution, or derivative works are prohibited** without explicit written permission
+- Any unauthorized commercial use may result in patent infringement claims
+
+**For Commercial Licensing:**
+Please contact: isaoogihara@ogiharadevelopment.net
+
+**Patent Information:**
+- Issued Patent: Ghost Interface Technology
+- Pending Patents: Related peripheral technologies
 
 ---
 

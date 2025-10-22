@@ -2,8 +2,8 @@
   "name": "ghostmarkdown",
   "displayName": "GhostMarkDown",
   "description": "Powerful code navigation and bookmarking with mouse hover + keyboard shortcuts. Create customizable marks (a-z) with priorities, filters, and team sync.",
-  "version": "0.2.0",
-  "publisher": "037458b4-e85a-64f0-a714-98f85ddb505b",
+  "version": "0.2.3",
+  "publisher": "Ogihara-Development",
   "icon": "icons/icon.png",
   "engines": {
     "vscode": "^1.85.0"
@@ -24,12 +24,22 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/ghostmarkdown.git"
+    "url": "https://github.com/ogiharadevelopment/GhostMarkDown.git"
   },
   "activationEvents": [
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
+  "files": [
+    "out/**/*",
+    "src/**/*",
+    "icons/**/*",
+    "test-samples/**/*",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "tokushoho.html"
+  ],
   "contributes": {
     "commands": [
       {
